@@ -14,11 +14,12 @@ export default function Home() {
       <NavBar />
       <main className="shell">
         <section className="hero">
-          <span className="eyebrow">OpenRouter Fusion brainstorming</span>
-          <h1>Turn rough startup questions into sharper strategic options.</h1>
+          <span className="eyebrow">100 AI models · One arena</span>
+          <h1>100 LLMs challenge each other. You get the winning answer.</h1>
           <p className="hero-copy">
-            Stormyy runs your prompt through a multi-model Fusion panel and returns a clean answer
-            for product strategy, acquisition theses, MVP planning, and market bets.
+            Stormyy pits Claude, Gemini, GPT, and dozens more frontier models against the same prompt —
+            they critique, refine, and outbid each other — then a judge model crowns the strongest answer.
+            No tab-hopping, no prompt engineering, just sharper strategy in seconds.
           </p>
           <div className="actions">
             <Link href="/app" className="btn btn-primary">Start brainstorming</Link>
@@ -34,13 +35,13 @@ export default function Home() {
           </div>
           <div className="card">
             <span className="card-num">02</span>
-            <h3>Fusion deliberates</h3>
-            <p>Several models analyze the same prompt, then a judge model synthesizes the strongest answer.</p>
+            <h3>100 models clash</h3>
+            <p>Claude, Gemini, GPT-4o, Llama, Mistral, DeepSeek and more — each proposes an answer, then cross-examine each other's reasoning. A judge model (Grok) synthesizes the survivor.</p>
           </div>
           <div className="card">
             <span className="card-num">03</span>
             <h3>Move faster</h3>
-            <p>Get plain-text ideas, tradeoffs, and recommendations without opening ten tabs.</p>
+            <p>Get one sharp answer — not 100 tabs of raw output. Ideas, tradeoffs, and recommendations distilled to their strongest form.</p>
           </div>
         </section>
 
@@ -63,7 +64,7 @@ export default function Home() {
               <p className="tier-desc">For trying out Stormyy</p>
               <ul className="tier-features">
                 <li>5 brainstorms per month</li>
-                <li>Fusion multi-model analysis</li>
+                <li>100-model arena (Claude, Gemini, GPT…)</li>
                 <li>Saved history</li>
                 <li>Full answer output</li>
               </ul>
@@ -75,7 +76,7 @@ export default function Home() {
               <p className="tier-desc">For teams that brainstorm regularly</p>
               <ul className="tier-features">
                 <li>100 brainstorms per month</li>
-                <li>Fusion multi-model analysis</li>
+                <li>100-model arena (Claude, Gemini, GPT…)</li>
                 <li>Saved history</li>
                 <li>Priority processing</li>
                 <li>Email support</li>
@@ -101,7 +102,7 @@ export default function Home() {
           <div className="footer-grid">
             <div className="footer-brand">
               <strong>↯ Stormyy</strong>
-              <p>Multi-model AI brainstorming for ambitious teams. Powered by OpenRouter Fusion.</p>
+              <p>100 frontier LLMs challenge each other on your toughest questions. Powered by OpenRouter Fusion.</p>
               <p style={{ marginTop: 8, fontSize: 12 }}>THELI SAS — RCS Paris 940 357 981 · 8 Rue des Cloys, 75018 Paris</p>
             </div>
             <div className="footer-cols">
