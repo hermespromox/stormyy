@@ -72,12 +72,10 @@ export async function POST(request: NextRequest) {
         plugins: [{
           id: 'fusion',
           analysis_models: [
-            'anthropic/claude-sonnet-4',
-            'google/gemini-2.5-pro',
-            'openai/gpt-4o',
-            'meta-llama/llama-3.3-70b-instruct',
-            'mistralai/mistral-large',
-            'deepseek/deepseek-chat',
+            'z-ai/glm-5.2',
+            'moonshotai/kimi-k2.7-code',
+            'qwen/qwen3.7-plus',
+            'deepseek/deepseek-v4-pro',
           ],
           model: 'x-ai/grok-4.3',
         }],
