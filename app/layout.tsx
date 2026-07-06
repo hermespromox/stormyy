@@ -4,11 +4,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Stormyy — Fusion brainstorming for ambitious teams",
-  description:
-    "A clean brainstorming tool powered by OpenRouter Fusion for strategic product, startup, and acquisition ideas.",
+  description: "Multi-model AI brainstorming for startup, product, and strategy decisions.",
   openGraph: {
     title: "Stormyy",
-    description: "Multi-model brainstorming for ambitious teams.",
+    description: "Turn rough startup questions into sharper strategic options.",
     type: "website",
   },
 };
@@ -16,6 +15,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+      </head>
       <body>
         {children}
         <Analytics />
