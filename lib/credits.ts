@@ -28,6 +28,7 @@ async function stormyyFetch<T>(path: string, init: RequestInit = {}): Promise<T 
       'Content-Type': 'application/json',
       'Accept-Profile': 'stormyy',
       'Content-Profile': 'stormyy',
+      'User-Agent': 'Mozilla/5.0 Stormyy/1.0',
       ...(init.headers || {}),
     },
     cache: 'no-store',
@@ -91,9 +92,29 @@ export async function countUserMonthlyBrainstorms(pool: Pool | null, userId: str
 
   const now = new Date();
   const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-  const rows = await stormyyFetch<Array<{ id: string }>>(
-    `brainstorms?select=id&user_id=eq.${encodeURIComponent(userId)}&created_at=gte.${encodeURIComponent(firstOfMonth)}`
+  const config = supabaseConfig();
+  if (!config) return 0;
+  const res = await fetch(
+    `${config.url}/rest/v1/brainstorms?select=id&user_id=eq.${encodeURIComponent(userId)}&created_at=gte.${encodeURIComponent(firstOfMonth)}`,
+    {
+      headers: {
+        apikey: config.key,
+        Authorization: `Bearer ${config.key}`,
+        'Accept-Profile': 'stormyy',
+        'Content-Profile': 'stormyy',
+        'User-Agent': 'Mozilla/5.0 Stormyy/1.0',
+        Prefer: 'count=exact',
+        Range: '0-0',
+        'Range-Unit': 'items',
+      },
+      cache: 'no-store',
+    }
   );
+  if (!res.ok) return 0;
+  const contentRange = res.headers.get('content-range');
+  const exactCount = contentRange?.match(/\/(\d+)$/)?.[1];
+  if (exactCount) return Number(exactCount) || 0;
+  const rows = await res.json();
   return Array.isArray(rows) ? rows.length : 0;
 }
 
