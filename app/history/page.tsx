@@ -3,25 +3,14 @@ import { redirect } from 'next/navigation';
 import NavBar from '@/components/NavBar';
 import { getCurrentConfirmedUser } from '@/lib/supabase/server';
 import { postgresPool } from '@/lib/pool';
-import { ensureStormyySchema } from '@/lib/credits';
+import { listBrainstorms } from '@/lib/credits';
 
 export default async function HistoryPage() {
   const user = await getCurrentConfirmedUser();
   if (!user) redirect('/login');
 
   const pool = postgresPool();
-  let items: any[] = [];
-
-  if (pool) {
-    try {
-      await ensureStormyySchema(pool);
-      const res = await pool.query(
-        `SELECT id, prompt, created_at FROM stormyy.brainstorms WHERE user_id = $1 ORDER BY created_at DESC LIMIT 50`,
-        [user.id]
-      );
-      items = res.rows;
-    } catch {}
-  }
+  const items = await listBrainstorms(pool, user.id, 50);
 
   return (
     <>

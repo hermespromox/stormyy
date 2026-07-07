@@ -3,23 +3,14 @@ import { redirect } from 'next/navigation';
 import NavBar from '@/components/NavBar';
 import { getCurrentConfirmedUser } from '@/lib/supabase/server';
 import { postgresPool } from '@/lib/pool';
+import { getBrainstorm } from '@/lib/credits';
 
 export default async function HistoryDetailPage({ params }: { params: { id: string } }) {
   const user = await getCurrentConfirmedUser();
   if (!user) redirect('/login');
 
   const pool = postgresPool();
-  let item: any = null;
-
-  if (pool) {
-    try {
-      const res = await pool.query(
-        `SELECT id, prompt, answer, created_at FROM stormyy.brainstorms WHERE id = $1 AND user_id = $2`,
-        [params.id, user.id]
-      );
-      item = res.rows[0] || null;
-    } catch {}
-  }
+  const item = await getBrainstorm(pool, user.id, params.id);
 
   if (!item) {
     return (

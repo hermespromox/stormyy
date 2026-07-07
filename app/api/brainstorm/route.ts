@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentConfirmedUser } from '@/lib/supabase/server';
 import { getPlanFromUser, PLANS, isStaffUser } from '@/lib/billing';
-import { countUserMonthlyBrainstorms, ensureStormyySchema } from '@/lib/credits';
+import { countUserMonthlyBrainstorms, saveBrainstorm } from '@/lib/credits';
 import { postgresPool } from '@/lib/pool';
 
 export const runtime = 'nodejs';
@@ -31,21 +31,18 @@ export async function POST(request: NextRequest) {
     const pool = postgresPool();
 
     // Rate limiting
-    if (pool) {
-      await ensureStormyySchema(pool);
-      const plan = getPlanFromUser(user);
-      const planConfig = PLANS[plan as keyof typeof PLANS];
-      const isUnlimited = planConfig?.maxBrainstorms === null;
+    const plan = getPlanFromUser(user);
+    const planConfig = PLANS[plan as keyof typeof PLANS];
+    const isUnlimited = planConfig?.maxBrainstorms === null;
 
-      if (!isUnlimited) {
-        const limit = planConfig?.maxBrainstorms ?? PLANS.free.maxBrainstorms;
-        const used = await countUserMonthlyBrainstorms(pool, user.id);
-        if (used >= limit) {
-          return NextResponse.json({
-            error: `You've reached your ${planConfig?.label || 'free'} monthly limit of ${limit} brainstorms. Upgrade to Pro for 100/month.`,
-            limit, used,
-          }, { status: 403 });
-        }
+    if (!isUnlimited) {
+      const limit = planConfig?.maxBrainstorms ?? PLANS.free.maxBrainstorms;
+      const used = await countUserMonthlyBrainstorms(pool, user.id);
+      if (used >= limit) {
+        return NextResponse.json({
+          error: `You've reached your ${planConfig?.label || 'free'} monthly limit of ${limit} brainstorms. Upgrade to Pro for 100/month.`,
+          limit, used,
+        }, { status: 403 });
       }
     }
 
@@ -95,20 +92,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Save to history
-    let saved = false;
-    let brainstormId = null;
-    if (pool) {
-      try {
-        const res = await pool.query(
-          `INSERT INTO stormyy.brainstorms (user_id, prompt, answer) VALUES ($1, $2, $3) RETURNING id`,
-          [user.id, prompt, answer]
-        );
-        brainstormId = res.rows[0]?.id || null;
-        saved = true;
-      } catch (err) {
-        console.warn('Failed to save brainstorm:', err);
-      }
-    }
+    const brainstormId = await saveBrainstorm(pool, user.id, prompt, answer);
+    const saved = Boolean(brainstormId);
 
     return NextResponse.json({ answer, saved, brainstormId });
   } catch (error) {
